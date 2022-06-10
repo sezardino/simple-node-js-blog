@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 
 import { PAGE_ROUTES } from "./types";
 import { PAGE_TEMPLATES, posts } from "./const";
-import { Post } from "./models";
+import { Contact, Post } from "./models";
 
 dotenv.config();
 
@@ -63,12 +63,8 @@ app.post(PAGE_ROUTES.ADD_POST, async (req: Request, res: Response) => {
   res.redirect(PAGE_TEMPLATES[PAGE_ROUTES.POSTS]);
 });
 
-app.get(PAGE_ROUTES.CONTACT, (req: Request, res: Response) => {
-  const links = [
-    { link: "#", name: "Linkedin" },
-    { link: "#", name: "GitHub" },
-    { link: "#", name: "Website" },
-  ];
+app.get(PAGE_ROUTES.CONTACT, async (req: Request, res: Response) => {
+  const links = await Contact.find();
 
   res.render(PAGE_TEMPLATES[PAGE_ROUTES.CONTACT], {
     title: "Contact",
