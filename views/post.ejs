@@ -7,14 +7,12 @@
     <%- include('./partials/nav.ejs') %>
       <article>
         <div class="info">
-          <% if(post) { %>
-            <% } %>
-              <span>
-                <%= post.createdAt %>
-              </span>
-              <span>
-                <%= post.author %>
-              </span>
+          <span>
+            <%= post.createdAt.toLocaleDateString() %>
+          </span>
+          <span>
+            <%= post.author %>
+          </span>
         </div>
         <h1>
           <%= post.title %>
@@ -22,7 +20,23 @@
         <p>
           <%= post.text %>
         </p>
+        <a href="/edit-post/<%= post.id %>" class="btn-edit">
+          <i class="fas fa-edit"></i>
+        </a>
+        <button class="btn-delete js-delete" data-id="<%= post.id %>">
+          <i class="fas fa-trash-alt" data-id="<%= post.id %>"></i>
+        </button>
       </article>
+
+      <script>
+        const deleteBtn = document.querySelector('.js-delete');
+
+        deleteBtn.addEventListener('click', () => {
+          const id = deleteBtn.dataset.id;
+
+          fetch(`/posts/${id}`, { method: 'DELETE' }).then(() => window.location.replace('/posts'));
+        })
+      </script>
   </body>
 
 </html>

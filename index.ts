@@ -35,6 +35,12 @@ app.get(PAGE_ROUTES.POSTS, async (req: Request, res: Response) => {
   res.render(PAGE_TEMPLATES[PAGE_ROUTES.POSTS], { title: "Posts", posts });
 });
 
+app.delete(PAGE_ROUTES.POST, async (req: Request, res: Response) => {
+  Post.findByIdAndDelete(req.params.id)
+    .then(() => res.sendStatus(200))
+    .catch((error) => res.render(PAGE_TEMPLATES.error, { title: "Error" }));
+});
+
 app.get(PAGE_ROUTES.POST, async (req: Request, res: Response) => {
   const postId = req.params.id;
 
@@ -49,6 +55,28 @@ app.get(PAGE_ROUTES.POST, async (req: Request, res: Response) => {
 
 app.get(PAGE_ROUTES.ADD_POST, (req: Request, res: Response) => {
   res.render(PAGE_TEMPLATES[PAGE_ROUTES.ADD_POST], { title: "Add New Post" });
+});
+
+app.get(PAGE_ROUTES.EDIT_POST, async (req: Request, res: Response) => {
+  const neededPost = await Post.findById(req.params.id);
+
+  if (!neededPost) {
+    res.redirect(PAGE_TEMPLATES.error);
+  }
+
+  res.render(PAGE_TEMPLATES[PAGE_ROUTES.EDIT_POST], {
+    title: "Edit Post",
+    post: neededPost,
+  });
+});
+
+app.post(PAGE_ROUTES.EDIT_POST, async (req: Request, res: Response) => {
+  const postID = req.params.id;
+  const { title, text, author } = req.body;
+
+  await Post.findByIdAndUpdate(postID, { title, text, author });
+
+  res.redirect(PAGE_TEMPLATES[PAGE_ROUTES.POSTS]);
 });
 
 app.post(PAGE_ROUTES.ADD_POST, async (req: Request, res: Response) => {

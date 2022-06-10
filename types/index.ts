@@ -5,4 +5,5 @@ export enum PAGE_ROUTES  {
   POSTS = '/posts',
   POST= "/posts/:id",
   ADD_POST = "/add-post",
+  EDIT_POST = "/edit-post/:id",
 }

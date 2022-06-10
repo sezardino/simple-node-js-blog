@@ -6,7 +6,7 @@
   <body>
     <%- include('./partials/nav.ejs') %>
       <h1>Posts:</h1>
-      <ul>
+      <ul class="js-list">
         <% if (posts.length) { %>
           <% posts.forEach((post)=> { %>
             <article>
@@ -19,13 +19,34 @@
                 <%= post.text %>
               </p>
               <div class="info">
-                <span><%= new Date(post.createdAt).toLocaleDateString() %></span>
-                <span><%= post.author %></span>
+                <span>
+                  <%= new Date(post.createdAt).toLocaleDateString() %>
+                </span>
+                <span>
+                  <%= post.author %>
+                </span>
               </div>
+              <button class="btn-delete" data-id="<%= post.id %>">
+                <i class="fas fa-trash-alt" data-id="<%= post.id %>"></i>
+              </button>
             </article>
             <% }) %>
               <% } %>
       </ul>
+
+      <script>
+        const list = document.querySelector('.js-list');
+
+        list.addEventListener('click', (evt) => {
+          const id = evt.target?.dataset?.id || null
+
+          if (!id) {
+            return
+          }
+
+          fetch(`/posts/${id}`, { method: 'DELETE' }).then(() => window.location.reload())
+        })
+      </script>
   </body>
 
 </html>

@@ -7,5 +7,6 @@ export const PAGE_TEMPLATES = {
   [PAGE_ROUTES.CONTACT]: getTemplatePath("contact"),
   [PAGE_ROUTES.POST]: getTemplatePath("post"),
   [PAGE_ROUTES.POSTS]: getTemplatePath("posts"),
+  [PAGE_ROUTES.EDIT_POST]: getTemplatePath("edit-post"),
   error: getTemplatePath("error"),
 };
