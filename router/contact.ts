@@ -1,17 +1,9 @@
-import { Router, Request, Response } from "express";
-import { PAGE_TEMPLATES } from "../const";
-import { Contact } from "../models";
+import { Router } from "express";
+import { contactController } from "../controller";
 import { PAGE_ROUTES } from "../types";
 
 const router = Router();
 
-router.get(PAGE_ROUTES.CONTACT, async (req: Request, res: Response) => {
-  const links = await Contact.find();
-
-  res.render(PAGE_TEMPLATES[PAGE_ROUTES.CONTACT], {
-    title: "Contact",
-    links,
-  });
-});
+router.get(PAGE_ROUTES.CONTACT, contactController.getContact);
 
 export { router as contactRouter };

@@ -1,69 +1,21 @@
-import { Router, Request, Response } from "express";
-import { PAGE_TEMPLATES } from "../const";
-import { Post } from "../models";
+import { Router } from "express";
 import { PAGE_ROUTES } from "../types";
+import { postsController } from "../controller";
 
 const router = Router();
 
-router.get(PAGE_ROUTES.POSTS, async (req: Request, res: Response) => {
-  const posts = await Post.find().sort({ createdAt: -1 });
-  res.render(PAGE_TEMPLATES[PAGE_ROUTES.POSTS], { title: "Posts", posts });
-});
+router.get(PAGE_ROUTES.POSTS, postsController.getPosts);
 
-router.delete(PAGE_ROUTES.POST, async (req: Request, res: Response) => {
-  Post.findByIdAndDelete(req.params.id)
-    .then(() => res.sendStatus(200))
-    .catch((error) => res.render(PAGE_TEMPLATES.error, { title: "Error" }));
-});
+router.delete(PAGE_ROUTES.POST, postsController.deletePost);
 
-router.get(PAGE_ROUTES.POST, async (req: Request, res: Response) => {
-  const postId = req.params.id;
+router.get(PAGE_ROUTES.POST, postsController.getPost);
 
-  const post = await Post.findById(postId);
+router.get(PAGE_ROUTES.ADD_POST, postsController.getAddPost);
 
-  if (!post) {
-    res.redirect("/404");
-  }
+router.get(PAGE_ROUTES.EDIT_POST, postsController.getEditPost);
 
-  res.render(PAGE_TEMPLATES[PAGE_ROUTES.POST], { title: "Post", post });
-});
+router.post(PAGE_ROUTES.EDIT_POST, postsController.editPost);
 
-router.get(PAGE_ROUTES.ADD_POST, (req: Request, res: Response) => {
-  res.render(PAGE_TEMPLATES[PAGE_ROUTES.ADD_POST], { title: "Add New Post" });
-});
-
-router.get(PAGE_ROUTES.EDIT_POST, async (req: Request, res: Response) => {
-  const neededPost = await Post.findById(req.params.id);
-
-  if (!neededPost) {
-    res.redirect(PAGE_TEMPLATES.error);
-  }
-
-  res.render(PAGE_TEMPLATES[PAGE_ROUTES.EDIT_POST], {
-    title: "Edit Post",
-    post: neededPost,
-  });
-});
-
-router.post(PAGE_ROUTES.EDIT_POST, async (req: Request, res: Response) => {
-  const postID = req.params.id;
-  const { title, text, author } = req.body;
-
-  await Post.findByIdAndUpdate(postID, { title, text, author });
-
-  res.redirect(PAGE_TEMPLATES[PAGE_ROUTES.POSTS]);
-});
-
-router.post(PAGE_ROUTES.ADD_POST, async (req: Request, res: Response) => {
-  const newPost = new Post({
-    author: req.body.author,
-    title: req.body.title,
-    text: req.body.text,
-  });
-
-  await newPost.save();
-
-  res.redirect(PAGE_TEMPLATES[PAGE_ROUTES.POSTS]);
-});
+router.post(PAGE_ROUTES.ADD_POST, postsController.addPost);
 
 export { router as postsRouter };
