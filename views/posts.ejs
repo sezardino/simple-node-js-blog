@@ -19,7 +19,7 @@
                 <%= post.text %>
               </p>
               <div class="info">
-                <span><%= post.date %></span>
+                <span><%= new Date(post.createdAt).toLocaleDateString() %></span>
                 <span><%= post.author %></span>
               </div>
             </article>
